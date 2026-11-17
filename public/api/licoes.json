@@ -1,0 +1,113 @@
+[
+  {
+    "intro": "Uma vitrine pode mostrar três gravuras lado a lado no computador e empilhá-las no celular. O conteúdo é o mesmo. Quem muda é o espaço disponível.",
+    "points": [
+      "Viewport é a área usada pelo navegador para organizar a página. O valor interessa em pixels CSS, que podem corresponder a vários pixels físicos.",
+      "Comece com o conteúdo em uma coluna. Acrescente colunas quando houver espaço para ler os títulos e tocar nos controles com conforto.",
+      "Na vitrine abaixo do título, a janela interna tem largura própria. O controle permite cruzar o ponto de mudança mesmo no celular."
+    ],
+    "language": "HTML + CSS",
+    "code": "<!-- O layout acompanha a largura do dispositivo. -->\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\n/* Uma coluna é o ponto de partida. */\n.vitrine { display: grid; gap: 1rem; }\n@media (min-width: 37.5rem) {\n  .vitrine { grid-template-columns: repeat(3, 1fr); }\n}",
+    "question": "Por que o site aparece minúsculo no celular mesmo com media queries?",
+    "answer": "Sem a meta viewport, o navegador móvel pode usar uma largura virtual de desktop para calcular o layout. As media queries enxergam essa largura e o navegador reduz o resultado inteiro para caber na tela. Com width=device-width e initial-scale=1, o layout parte da largura do aparelho em pixels CSS e da escala inicial normal.",
+    "sources": [
+      [
+        "MDN · Meta viewport",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta/name/viewport"
+      ]
+    ]
+  },
+  {
+    "intro": "Uma medida pode acompanhar a fonte, o contêiner ou a janela. Escolha a referência que deve crescer junto com o elemento.",
+    "points": [
+      "px é uma unidade absoluta de CSS. Serve para um contorno fino. rem acompanha a fonte raiz e é útil para texto e espaçamento.",
+      "em acompanha a fonte do próprio elemento. Em font-size, usa a fonte do pai. É útil para que o preenchimento de um botão cresça com seu rótulo.",
+      "Em width, 50% usa metade da largura do bloco de referência. No Grid, 1fr recebe uma fração do espaço restante das trilhas.",
+      "1vw vale 1% da largura da janela. 1vh vale 1% da altura do viewport grande. Para um painel que acompanha a barra móvel do navegador, use dvh, que varia com a altura visível.",
+      "ch mede o avanço do caractere zero na fonte usada. max-width: 65ch ajuda a limitar o comprimento das linhas de leitura."
+    ],
+    "language": "CSS",
+    "code": "/* A fonte acompanha a preferência definida na raiz. */\n.artigo { font-size: 1.125rem; max-width: 65ch; }\n/* A margem interna cresce com a letra do botão. */\n.botao { padding: .5em 1em; }\n/* O painel acompanha mudanças na altura visível. */\n.painel { min-height: 100dvh; }",
+    "question": "Por que mudar a fonte padrão aumenta o texto em rem e mantém o texto em px?",
+    "answer": "Quando a raiz respeita o tamanho padrão do navegador, 1rem segue essa preferência. Se a raiz passa de 16 para 20 px, 1,5rem passa de 24 para 30 px. Uma declaração de 24px fixa o tamanho em pixels CSS. O zoom da página é outro controle e pode ampliar ambos.",
+    "sources": [
+      [
+        "MDN · Unidades de comprimento",
+        "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/length"
+      ]
+    ]
+  },
+  {
+    "intro": "Flexbox distribui itens ao longo de um eixo. Grid coordena linhas e colunas. Uma barra de ações e uma galeria de gravuras pedem soluções diferentes.",
+    "points": [
+      "Em Flexbox, justify-content distribui os itens no eixo principal. align-items os alinha no eixo transversal. flex-wrap permite quebrar a linha quando faltar espaço.",
+      "gap define o intervalo entre os itens. No Grid, repeat(auto-fit, minmax(14rem, 1fr)) acomoda as colunas que cabem e reparte o espaço restante entre elas.",
+      "Na bancada, cada coluna ocupa ao menos 14rem. A régua mede a área de conteúdo interna e a fonte raiz do experimento vale 16px."
+    ],
+    "language": "CSS",
+    "code": "/* Barra que pode quebrar em duas linhas. */\n.acoes { display: flex; flex-wrap: wrap; gap: 1rem;\n  justify-content: space-between; align-items: center; }\n\n/* Galeria com colunas que aproveitam o espaço livre. */\n.galeria { display: grid; gap: 1rem;\n  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }",
+    "question": "Qual é a primeira largura que comporta duas colunas de 14rem com 1rem de intervalo?",
+    "answer": "Cada coluna precisa de 14 × 16 = 224 px. Duas colunas e um intervalo exigem 224 + 16 + 224 = 464 px de largura interna. Teste 463 e 464 px na régua e observe a segunda gravura.",
+    "sources": [
+      [
+        "MDN · Grid",
+        "https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout"
+      ],
+      [
+        "MDN · Flexbox",
+        "https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Flexible_box_layout"
+      ]
+    ]
+  },
+  {
+    "intro": "Reserve o lugar da imagem antes do download. Depois escolha como ela deve encolher ou preencher sua moldura.",
+    "points": [
+      "max-width: 100% evita que a imagem ultrapasse o contêiner. height: auto preserva a proporção original ao redimensioná-la.",
+      "Os atributos width e height descrevem as dimensões originais e permitem reservar espaço antes de receber os pixels. aspect-ratio define a proporção de uma moldura.",
+      "Dentro de uma moldura fixa, object-fit: cover preenche o quadro recortando bordas. contain mostra toda a imagem, com possíveis faixas vazias.",
+      "srcset oferece arquivos de resoluções diferentes. Com descritores w, sizes descreve o espaço de exibição para o navegador escolher. Use loading=\"lazy\" nas imagens distantes da primeira tela. A imagem principal visível deve começar a carregar cedo."
+    ],
+    "language": "HTML + CSS",
+    "code": "<!-- Imagem abaixo da primeira tela, com proporção conhecida. -->\n<img src=\"cartaz.png\" width=\"720\" height=\"480\"\n     srcset=\"cartaz-menor.png 360w, cartaz.png 720w\"\n     sizes=\"(min-width: 48rem) 40rem, 90vw\"\n     loading=\"lazy\" alt=\"Cartaz com círculos concêntricos\">\n\n/* Preserva a proporção ao encolher. */\nimg { max-width: 100%; height: auto; }",
+    "question": "Por que o texto pula quando a imagem chega? Qual métrica mede isso?",
+    "answer": "Sem dimensões ou uma proporção reservada por CSS, o navegador pode posicionar o texto antes de conhecer a altura da imagem. Ao descobrir essa altura, ele recalcula o layout e desloca o texto. O Cumulative Layout Shift (CLS) mede a instabilidade causada por deslocamentos inesperados.",
+    "sources": [
+      [
+        "MDN · Imagens e desempenho",
+        "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Performance/Multimedia"
+      ],
+      [
+        "web.dev · Core Web Vitals",
+        "https://web.dev/articles/vitals"
+      ]
+    ]
+  },
+  {
+    "intro": "Pense em cada componente como uma peça com uma tarefa. Ao atualizar uma lista, o Vue também precisa saber qual peça representa cada item.",
+    "points": [
+      "Organize páginas em views, peças reutilizáveis em components e estado compartilhado em stores. Nomes como LabPanel e ChapterView ajudam a localizar cada responsabilidade.",
+      "Props tipadas definem os dados que entram. Eventos comunicam ações ao componente pai. Use uma chave única e estável no v-for, como o ID do registro.",
+      "Design tokens são decisões reutilizáveis. Neste guia, var(--green) e var(--m) mantêm a cor e o espaçamento consistentes em várias telas.",
+      "O import() na definição da rota adia o download da página até a visita. O Pinia guarda as lições para evitar buscar o mesmo JSON a cada navegação.",
+      "LCP mede quando o maior conteúdo visível aparece. INP mede a demora de uma interação até a próxima pintura. CLS mede a instabilidade visual durante a visita."
+    ],
+    "language": "Vue",
+    "code": "<script setup lang=\"ts\">\n// O pai fornece os animais e recebe o ID escolhido.\ndefineProps<{ animais: { id: number, nome: string }[] }>()\nconst emit = defineEmits<{ selecionar: [id: number] }>()\n</script>\n<template>\n  <button v-for=\"a in animais\" :key=\"a.id\"\n          @click=\"emit('selecionar', a.id)\">\n    {{ a.nome }}\n  </button>\n</template>",
+    "question": "O que pode acontecer com o texto do segundo animal quando o primeiro é removido?",
+    "answer": "Sem uma chave estável, o Vue pode reaproveitar os campos pela posição. O segundo campo continua com seu texto local, mas passa a exibir o animal que antes era o terceiro. Usar o índice como chave reproduz esse efeito. Com uma chave estável, o campo acompanha o animal durante a atualização.",
+    "sources": [
+      [
+        "Vue · Listas e chaves",
+        "https://vuejs.org/guide/essentials/list.html"
+      ],
+      [
+        "Vue Router · Rotas sob demanda",
+        "https://router.vuejs.org/guide/advanced/lazy-loading.html"
+      ],
+      [
+        "web.dev · Core Web Vitals",
+        "https://web.dev/articles/vitals"
+      ]
+    ]
+  }
+]

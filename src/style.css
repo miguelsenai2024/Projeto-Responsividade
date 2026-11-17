@@ -1,0 +1,373 @@
+:root {
+  --paper: #f8f6ee;
+  --white: #fffdf6;
+  --ink: #182c25;
+  --muted: #506157;
+  --green: #174939;
+  --acid: #dbef93;
+  --line: #c2c8b7;
+  --grid: #d3d8c7;
+  --xs: 0.35rem;
+  --s: 0.65rem;
+  --m: 1rem;
+  --l: 1.5rem;
+  --xl: 2.5rem;
+  --xxl: 4rem;
+  font-family: "Inter", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.58;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+a {
+  color: var(--green);
+  text-underline-offset: 0.24em;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+select {
+  cursor: pointer;
+}
+button,
+.next {
+  background: var(--green);
+  color: var(--white);
+  border: 0;
+  border-radius: 0.3rem;
+  padding: var(--s) var(--m);
+  font-weight: 650;
+}
+button:disabled {
+  opacity: 0.6;
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 0.2rem solid #aa451c;
+  outline-offset: 0.2rem;
+}
+header,
+footer {
+  border-block-end: 1px solid var(--line);
+}
+.mast,
+.shell,
+footer {
+  max-width: 78rem;
+  margin: auto;
+  padding: var(--m);
+}
+.mast,
+footer,
+.sectionhead,
+.control,
+.labhead,
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s);
+  flex-wrap: wrap;
+}
+.brand {
+  font:
+    bold 2.1rem/1 Georgia,
+    serif;
+  letter-spacing: -0.08em;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+.brand i {
+  display: grid;
+  place-items: center;
+  background: var(--green);
+  color: var(--acid);
+  font: 1.65rem/1 monospace;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-right: var(--s);
+  border-radius: 0.25rem;
+}
+.brand span {
+  color: #65803e;
+}
+.edition {
+  display: none;
+}
+.shell {
+  padding-block: var(--l) var(--xxl);
+}
+nav {
+  display: none;
+}
+nav.open {
+  display: grid;
+  margin-bottom: var(--l);
+}
+nav a {
+  padding: var(--s) var(--m);
+  display: flex;
+  gap: var(--m);
+  align-items: center;
+  text-decoration: none;
+  border-left: 2px solid var(--line);
+}
+nav a.router-link-active {
+  background: var(--acid);
+  border-color: var(--green);
+  font-weight: 700;
+}
+nav b {
+  padding: var(--m);
+}
+main {
+  min-width: 0;
+  outline: none;
+}
+.eyebrow,
+small,
+.edition,
+output,
+.labhead span {
+  font:
+    600 0.78rem/1.4 "IBM Plex Mono",
+    ui-monospace,
+    monospace;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.ink {
+  color: var(--green);
+}
+h1,
+h2,
+p {
+  margin: 0;
+}
+h1,
+h2 {
+  font-family: "DM Serif Display", Georgia, serif;
+  font-weight: 500;
+  line-height: 1.08;
+}
+h1 {
+  font-size: clamp(2.85rem, 6.7vw, 6.4rem);
+  letter-spacing: -0.066em;
+  max-width: 13ch;
+  margin: var(--m) 0;
+}
+h2 {
+  font-size: clamp(1.55rem, 3vw, 2.2rem);
+  letter-spacing: -0.045em;
+}
+.lead {
+  font-size: 1.14rem;
+  color: var(--muted);
+  max-width: 62ch;
+}
+.lab,
+.sheet,
+.answer {
+  padding: clamp(1rem, 3vw, 2rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+}
+.lab {
+  background: var(--green);
+  color: var(--white);
+}
+section,
+.sheet {
+  margin-top: var(--xl);
+}
+.labhead {
+  color: var(--acid);
+  margin-bottom: var(--s);
+}
+.labhead span {
+  font-size: 1.4rem;
+}
+.lab p,
+.answer p {
+  margin-block: var(--s) var(--m);
+  max-width: 65ch;
+}
+.board,
+.samples {
+  background: var(--paper);
+  color: var(--ink);
+  padding: var(--m);
+  border-radius: 0.25rem;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 1rem 1rem;
+}
+.frame {
+  overflow: hidden;
+}
+.frame iframe {
+  display: block;
+  border: 0;
+  transform-origin: top left;
+  pointer-events: none;
+}
+.control {
+  margin-top: var(--m);
+}
+output {
+  background: var(--acid);
+  color: var(--green);
+  padding: var(--xs) var(--s);
+  border-radius: 0.25rem;
+}
+input[type="range"] {
+  width: 100%;
+  margin: var(--s) 0;
+  accent-color: var(--acid);
+  height: 1.5rem;
+}
+.right {
+  float: right;
+}
+.samples {
+  display: flex;
+  gap: var(--l);
+}
+.samples div {
+  flex: 1;
+  background: var(--white);
+  padding: var(--m);
+}
+.samples strong {
+  display: block;
+}
+.lab img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/1;
+  background: var(--acid);
+  margin-bottom: var(--m);
+}
+input:not([type="range"]):not([type="checkbox"]),
+select {
+  max-width: 100%;
+  padding: var(--s);
+  border: 1px solid var(--line);
+  border-radius: 0.2rem;
+}
+.animal,
+.sheet label {
+  display: grid;
+  gap: var(--xs);
+  margin: var(--s) 0;
+}
+.actions {
+  justify-content: flex-start;
+  margin-top: var(--m);
+}
+.lab button {
+  background: var(--acid);
+  color: var(--ink);
+}
+select,
+.sheet button {
+  margin: var(--xs);
+}
+.sheet p {
+  margin-top: var(--m);
+}
+ul {
+  padding-inline-start: var(--l);
+}
+li + li {
+  margin-top: var(--s);
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--l);
+  border-radius: 0.4rem;
+  font-size: 0.92rem;
+}
+.answer {
+  border-left: 0.3rem solid var(--green);
+}
+.answer h2 {
+  font-size: 1.55rem;
+  margin-top: var(--s);
+}
+.sources {
+  display: flex;
+  gap: var(--m);
+  flex-wrap: wrap;
+  margin: var(--m) 0;
+}
+.next {
+  display: inline-block;
+  text-decoration: none;
+  margin-top: var(--l);
+}
+footer {
+  border-top: 1px solid var(--line);
+}
+footer span {
+  color: var(--muted);
+}
+.skip {
+  position: absolute;
+  left: -100rem;
+}
+.skip:focus {
+  left: var(--m);
+  background: white;
+}
+@media (min-width: 48rem) {
+  .menu {
+    display: none;
+  }
+  .edition {
+    display: block;
+  }
+  .shell {
+    display: grid;
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: var(--xl);
+    padding-top: var(--xl);
+  }
+  nav,
+  nav.open {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: var(--m);
+    height: fit-content;
+  }
+  .mast,
+  .shell,
+  footer {
+    padding-inline: var(--xl);
+  }
+}
+.release {
+  margin-block: var(--l);
+  padding: var(--m);
+  border-left: 0.2rem solid var(--green);
+}
