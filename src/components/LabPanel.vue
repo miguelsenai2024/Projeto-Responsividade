@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from "vue";
-import { gridLab } from "../gridLab";
+import { GRID_GAP_REM, MIN_CARD_REM, ROOT_FONT_SIZE_PX, getActiveColumns, getMinWidthForColumnsPx, prints } from "../gridLab";
 
 const props = defineProps<{ index: number }>();
 const titles = [
@@ -24,7 +24,8 @@ onMounted(() => {
 });
 const preview = ref<HTMLIFrameElement>();
 const previewHeight = ref(280);
-const columns = ref(1);
+// auto-fit recolhe as trilhas sem gravura.
+const columns = computed(() => Math.min(prints.length, getActiveColumns(wide.value)));
 let previewObserver: ResizeObserver | undefined;
 function observePreview() {
   previewObserver?.disconnect();
@@ -32,9 +33,6 @@ function observePreview() {
   if (!grid) return;
   previewObserver = new ResizeObserver(() => {
     previewHeight.value = Math.ceil(grid.getBoundingClientRect().height);
-    // auto-fit conserva trilhas vazias de 0px quando sobra espaço no fim.
-    const tracks = getComputedStyle(grid).gridTemplateColumns.split(" ");
-    columns.value = tracks.filter((track) => parseFloat(track) > 0).length;
   });
   previewObserver.observe(grid);
 }
@@ -69,17 +67,17 @@ function reset() {
 }
 
 const layout = props.index === 2
-  ? `grid-template-columns:repeat(auto-fit,minmax(${gridLab.columnRem}rem,1fr));gap:${gridLab.gapRem}rem;`
+  ? `grid-template-columns:repeat(auto-fit,minmax(${MIN_CARD_REM}rem,1fr));gap:${GRID_GAP_REM}rem;`
   : "grid-template-columns:1fr;gap:0.5rem;";
 const demo =
-  '<!doctype html><html lang="pt-BR"><meta name="viewport" content="width=device-width, initial-scale=1"><style>*{box-sizing:border-box}html{overflow:hidden;font-size:' + gridLab.rootPx + 'px}body{margin:0;font:14px monospace;color:#17271c}main{display:grid;' +
+  '<!doctype html><html lang="pt-BR"><meta name="viewport" content="width=device-width, initial-scale=1"><style>*{box-sizing:border-box}html{overflow:hidden;font-size:' + ROOT_FONT_SIZE_PX + 'px}body{margin:0;font:14px monospace;color:#17271c}main{display:grid;' +
   layout +
   "}article{padding:10px;background:#fbf7ea;border:1px solid #203f34}b{display:block;margin-top:5px}.art{height:45px;background:repeating-linear-gradient(135deg,#cce68b 0 12px,#214a40 12px 23px)}article:nth-child(2) .art{background:radial-gradient(circle at 50% 100%,#df784e 0 24%,#ffe7a8 25% 44%,#9ab4a4 45%)}article:nth-child(3) .art{background:repeating-radial-gradient(circle at 100% 100%,#1d5548 0 10px,#c3d7be 11px 20px)}" +
   (props.index === 0
     ? "@media(min-width:600px){main{grid-template-columns:repeat(3,1fr)}}"
     : "") +
   "</style><main>" +
-  gridLab.prints
+  prints
     .map(
       (s, i) =>
         '<article><div class="art"></div><b>0' +
@@ -103,7 +101,7 @@ const demo =
         {{
           index === 0
             ? "Mova a régua. A vitrine troca de composição quando a janela interna chega a 600 px."
-            : "Aumente a bancada e observe quando cabe mais uma peça. Cada peça exige 224 px e cada intervalo mede 16 px."
+            : `Aumente a bancada e observe quando cabe mais uma peça. Cada peça exige ${getMinWidthForColumnsPx(1)} px e cada intervalo mede ${GRID_GAP_REM * ROOT_FONT_SIZE_PX} px.`
         }}
       </p>
       <div class="board">

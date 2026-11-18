@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { gridLab, minimumGridWidth } from "../gridLab";
+import { GRID_GAP_REM, MIN_CARD_REM, ROOT_FONT_SIZE_PX, getMinWidthForColumnsPx, prints } from "../gridLab";
 import { useGuide } from "../stores/guide";
 
 const guide = useGuide();
 const value = ref<number>();
 const message = ref("");
-const pieces = gridLab.prints.length;
+const pieces = prints.length;
 const gaps = pieces - 1;
-const target = minimumGridWidth(pieces);
+const target = getMinWidthForColumnsPx(pieces);
 
 function clearFeedback() {
   message.value = "";
@@ -18,8 +18,8 @@ function clearFeedback() {
 function check() {
   guide.solved = value.value === target;
   if (guide.solved) {
-    const totalRem = target / gridLab.rootPx;
-    message.value = `Correto! ${pieces} × ${gridLab.columnRem}rem + ${gaps} × ${gridLab.gapRem}rem = ${totalRem}rem. Com a raiz de ${gridLab.rootPx}px, são ${target}px.`;
+    const totalRem = target / ROOT_FONT_SIZE_PX;
+    message.value = `Correto! ${pieces} × ${MIN_CARD_REM}rem + ${gaps} × ${GRID_GAP_REM}rem = ${totalRem}rem. Com a raiz de ${ROOT_FONT_SIZE_PX}px, são ${target}px.`;
   } else if (Number(value.value) < target) {
     message.value = "Ainda falta espaço. Aumente a régua até a última gravura entrar na primeira linha.";
   } else {
@@ -33,8 +33,8 @@ function check() {
   <h1>Desafio de Grid</h1>
   <p class="lead">
     Na Bancada de Grid, a partir de quantos pixels de largura do contêiner a
-    gravura {{ gridLab.prints[2] }} entra na primeira linha, ao lado de
-    {{ gridLab.prints[0] }} e {{ gridLab.prints[1] }}?
+    gravura {{ prints[2] }} entra na primeira linha, ao lado de
+    {{ prints[0] }} e {{ prints[1] }}?
   </p>
   <RouterLink class="next" to="/layout">Investigar no laboratório de Grid →</RouterLink>
   <form class="sheet" @submit.prevent="check">
