@@ -1,11 +1,20 @@
 :root {
   --color-bg: #0f172a;
-  --color-surface: #1e293b;
-  --color-text: #f8fafc;
-  --color-muted: #94a3b8;
-  --color-primary: #14b8a6;
-  --color-accent: #f59e0b;
-  --color-border: #334155;
+  --color-surface: #242527;
+  --color-text: #ececee;
+  --color-muted: #b8b9bc;
+  --color-primary: #dcdddf;
+  --color-accent: #c1c3c7;
+  --color-border: #494b50;
+  --code-bg: #121314;
+  --code-text: #d4d4d4;
+  --code-comment: #91979e;
+  --code-tag: #89d185;
+  --code-property: #9cdcfe;
+  --code-string: #ce9178;
+  --code-keyword: #c586c0;
+  --code-number: #b5cea8;
+  --code-function: #dcdcaa;
   --space-2xs: 0.25rem;
   --space-xs: 0.5rem;
   --space-sm: 0.75rem;
@@ -50,7 +59,7 @@ img, video, svg, canvas {
 }
 a {
   color: var(--color-primary);
-  text-underline-offset: 0.24em;
+  text-underline-offset: 0.24rem;
 }
 button,
 input,
@@ -107,7 +116,7 @@ footer,
   font:
     bold var(--font-2xl)/1 Georgia,
     serif;
-  letter-spacing: -0.08em;
+  letter-spacing: -0.16rem;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -183,7 +192,7 @@ output,
 }
 .eyebrow {
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.105rem;
 }
 .ink {
   color: var(--color-primary);
@@ -201,13 +210,13 @@ h2 {
 }
 h1 {
   font-size: var(--font-heading);
-  letter-spacing: -0.066em;
+  letter-spacing: -0.18rem;
   max-width: 13ch;
   margin: var(--space-md) 0;
 }
 h2 {
   font-size: var(--font-xl);
-  letter-spacing: -0.045em;
+  letter-spacing: -0.07rem;
 }
 .lead {
   font-size: var(--font-lg);
@@ -364,16 +373,27 @@ pre code {
 }
 pre code {
   display: block;
+  font-family: inherit;
 }
 pre {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  background: var(--color-text);
-  color: var(--color-bg);
+  background: var(--code-bg);
+  color: var(--code-text);
+  border: var(--stroke-thin) solid var(--color-border);
+  font-family: Consolas, "Liberation Mono", ui-monospace, monospace;
   padding: var(--space-lg);
   border-radius: var(--radius-sm);
   font-size: var(--font-base);
 }
+.token.comment { color: var(--code-comment); }
+.token.tag, .token.selector { color: var(--code-tag); }
+.token.attr-name, .token.property { color: var(--code-property); }
+.token.string, .token.attr-value { color: var(--code-string); }
+.token.keyword, .token.atrule { color: var(--code-keyword); }
+.token.number, .token.boolean { color: var(--code-number); }
+.token.function { color: var(--code-function); }
+.token.punctuation { color: var(--code-text); }
 .answer {
   border-left: 0.3rem solid var(--color-primary);
 }

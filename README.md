@@ -34,7 +34,7 @@ A interface usa Vue 3 com Composition API e `<script setup lang="ts">`. O Vite c
 - **Laboratórios.** `src/components/LabPanel.vue` monta o experimento de cada seção. A bancada e o desafio usam `src/gridLab.ts` para calcular quantas colunas cabem e qual largura elas exigem. Com raiz de 16 px, mínimo de 14 rem e intervalo de 1 rem, duas gravuras ocupam 464 px e três ocupam 704 px.
 - **Estilos.** `src/style.css` usa CSS mobile-first. Cores, espaçamentos, tamanhos de fonte e raios são design tokens em `:root`. O menu abre por botão no celular e fica visível a partir de 48 rem.
 
-O projeto usa caminhos relativos para funcionar também no subdiretório do GitHub Pages. A identidade visual segue a skill [visual-design-foundations](https://github.com/miguelsenai2024/Minhas-Skills/blob/main/Design%20e%20UX/GitHub-wshobson--agents/visual-design-foundations/SKILL.md).
+O projeto usa caminhos relativos para funcionar também no subdiretório do GitHub Pages.
 
 ## Publicar no GitHub Pages
 

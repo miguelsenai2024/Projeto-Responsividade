@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Prism from "prismjs";
 import { computed, ref } from "vue";
 import { chapters, type LessonIndex } from "../chapters";
 import { useGuideStore } from "../stores/guide";
@@ -9,6 +10,11 @@ const guide = useGuideStore();
 const current = computed(() => chapters[props.index]!);
 const lesson = computed(() => guide.lessons.find((item) => "/" + item.slug === current.value.path)
   ?? guide.lessons[props.index]);
+const highlightedCode = computed(() => {
+  if (!lesson.value) return "";
+  const language = lesson.value.language === "CSS" ? "css" : "markup";
+  return Prism.highlight(lesson.value.code, Prism.languages[language]!, language);
+});
 const vueRepository = "vuejs/core";
 const releaseVersion = ref("");
 const sources = computed(() => {
@@ -44,7 +50,7 @@ const sources = computed(() => {
         <h2>Código comentado</h2>
         <small>{{ lesson.language }}</small>
       </div>
-      <pre><code>{{ lesson.code }}</code></pre>
+      <pre><code v-html="highlightedCode"></code></pre>
     </section>
     <section class="answer">
       <b class="eyebrow">Pergunta-guia</b>
