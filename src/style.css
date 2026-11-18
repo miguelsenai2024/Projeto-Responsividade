@@ -18,6 +18,10 @@
   --font-lg: 1.25rem;
   --font-xl: 1.5rem;
   --font-2xl: 2rem;
+  --font-heading: 2.85rem;
+  --font-heading-wide: 4.5rem;
+  --radius-xs: 0.25rem;
+  --stroke-thin: 0.0625rem;
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   color-scheme: dark;
@@ -78,7 +82,7 @@ select:focus-visible {
 }
 header,
 footer {
-  border-block-end: 1px solid var(--color-border);
+  border-block-end: var(--stroke-thin) solid var(--color-border);
 }
 .mast,
 .shell,
@@ -101,7 +105,7 @@ footer,
 }
 .brand {
   font:
-    bold 2.1rem/1 Georgia,
+    bold var(--font-2xl)/1 Georgia,
     serif;
   letter-spacing: -0.08em;
   text-decoration: none;
@@ -113,11 +117,11 @@ footer,
   place-items: center;
   background: var(--color-primary);
   color: var(--color-bg);
-  font: 1.65rem/1 monospace;
+  font: var(--font-xl)/1 monospace;
   width: 2.25rem;
   height: 2.25rem;
   margin-right: var(--space-sm);
-  border-radius: 0.25rem;
+  border-radius: var(--radius-xs);
 }
 .brand span {
   color: var(--color-primary);
@@ -147,7 +151,7 @@ nav a {
   gap: var(--space-md);
   align-items: center;
   text-decoration: none;
-  border-left: 2px solid var(--color-border);
+  border-left: 0.125rem solid var(--color-border);
 }
 nav a.router-link-active {
   background: var(--color-accent);
@@ -158,8 +162,13 @@ nav a.router-link-active {
 nav b {
   padding: var(--space-md);
 }
-main {
+main,
+.lab {
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
+}
+main {
   outline: none;
 }
 .eyebrow,
@@ -191,7 +200,7 @@ h2 {
   line-height: 1.08;
 }
 h1 {
-  font-size: 2.85rem;
+  font-size: var(--font-heading);
   letter-spacing: -0.066em;
   max-width: 13ch;
   margin: var(--space-md) 0;
@@ -210,7 +219,7 @@ h2 {
 .answer {
   padding: var(--space-md);
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: var(--stroke-thin) solid var(--color-border);
   border-radius: var(--radius-md);
 }
 .lab {
@@ -226,7 +235,7 @@ section,
   margin-bottom: var(--space-sm);
 }
 .labhead span {
-  font-size: 1.4rem;
+  font-size: var(--font-xl);
 }
 .lab p,
 .answer p {
@@ -238,10 +247,10 @@ section,
   background: var(--color-bg);
   color: var(--color-text);
   padding: var(--space-md);
-  border-radius: 0.25rem;
+  border-radius: var(--radius-xs);
   background-image:
-    linear-gradient(var(--color-border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+    linear-gradient(var(--color-border) var(--stroke-thin), transparent var(--stroke-thin)),
+    linear-gradient(90deg, var(--color-border) var(--stroke-thin), transparent var(--stroke-thin));
   background-size: 1rem 1rem;
 }
 .frame {
@@ -260,7 +269,7 @@ output {
   background: var(--color-accent);
   color: var(--color-bg);
   padding: var(--space-2xs) var(--space-sm);
-  border-radius: 0.25rem;
+  border-radius: var(--radius-xs);
 }
 input[type="range"] {
   width: 100%;
@@ -307,21 +316,25 @@ input[type="range"] {
   min-width: 0;
   margin: 0;
   padding: var(--space-sm);
-  border: 1px solid var(--color-muted);
+  border: var(--stroke-thin) solid var(--color-muted);
 }
 input:not([type="range"]):not([type="checkbox"]),
 select {
   min-width: 0;
   max-width: 100%;
   padding: var(--space-sm);
-  border: 1px solid var(--color-border);
-  border-radius: 0.2rem;
+  border: var(--stroke-thin) solid var(--color-border);
+  border-radius: var(--radius-xs);
 }
 .animal,
 .sheet label {
   display: grid;
   gap: var(--space-2xs);
   margin: var(--space-sm) 0;
+}
+.actions > * {
+  min-width: 0;
+  max-width: 100%;
 }
 .actions {
   justify-content: flex-start;
@@ -344,22 +357,28 @@ ul {
 li + li {
   margin-top: var(--space-sm);
 }
-pre {
+pre,
+pre code {
   max-width: 100%;
   overflow-x: auto;
+}
+pre code {
+  display: block;
+}
+pre {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   background: var(--color-text);
   color: var(--color-bg);
   padding: var(--space-lg);
-  border-radius: 0.4rem;
-  font-size: 0.92rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-base);
 }
 .answer {
   border-left: 0.3rem solid var(--color-primary);
 }
 .answer h2 {
-  font-size: 1.55rem;
+  font-size: var(--font-xl);
   margin-top: var(--space-sm);
 }
 .sources {
@@ -374,7 +393,7 @@ pre {
   margin-top: var(--space-lg);
 }
 footer {
-  border-top: 1px solid var(--color-border);
+  border-top: var(--stroke-thin) solid var(--color-border);
 }
 footer span {
   color: var(--color-muted);
@@ -389,7 +408,7 @@ footer span {
 }
 @media (min-width: 48rem) {
   h1 {
-    font-size: 4.5rem;
+    font-size: var(--font-heading-wide);
   }
   h2 {
     font-size: var(--font-2xl);
