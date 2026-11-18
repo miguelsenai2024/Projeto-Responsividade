@@ -4,16 +4,21 @@ import { useRoute } from "vue-router";
 import { chapters } from "./chapters";
 import { useGuide } from "./stores/guide";
 import "./style.css";
-const open = ref(false);
+const menuOpen = ref(false);
+function closeMenu() {
+  menuOpen.value = false;
+}
 const route = useRoute();
 const guide = useGuide();
 guide.load();
 watch(
   () => route.path,
   () => {
-    open.value = false;
-    document.title = String(route.name || "Guia") + " · Escala";
+    closeMenu();
+    const chapter = chapters.find((item) => item.path === route.path);
+    document.title = (chapter?.title ?? "Guia") + " · Escala";
   },
+  { immediate: true },
 );
 </script>
 <template>
@@ -25,23 +30,24 @@ watch(
   >
   <header>
     <div class="mast">
-      <RouterLink class="brand" to="/viewport"
+      <RouterLink class="brand" to="/viewport" @click="closeMenu"
         ><i aria-hidden="true">▥</i> Escala<span>.</span></RouterLink
       ><span class="edition">Caderno de interfaces</span
       ><button
+        type="button"
         class="menu"
         aria-controls="indice"
-        :aria-expanded="open"
-        @click="open = !open"
+        :aria-expanded="menuOpen"
+        @click="menuOpen = !menuOpen"
       >
-        {{ open ? "Fechar ×" : "Índice ☰" }}
+        {{ menuOpen ? "Fechar ×" : "Menu ☰" }}
       </button>
     </div>
   </header>
   <div class="shell">
-    <nav id="indice" :class="{ open }" aria-label="Índice do guia">
+    <nav id="indice" :class="{ open: menuOpen }" aria-label="Índice do guia">
       <b class="eyebrow">Neste guia</b
-      ><RouterLink v-for="(c, i) in chapters" :key="c.path" :to="c.path"
+      ><RouterLink v-for="(c, i) in chapters" :key="c.path" :to="c.path" @click="closeMenu"
         ><small>0{{ i + 1 }}</small
         >{{ c.title }}</RouterLink
       >

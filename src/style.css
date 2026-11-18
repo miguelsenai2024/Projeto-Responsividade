@@ -108,11 +108,17 @@ footer,
 .shell {
   padding-block: var(--l) var(--xxl);
 }
+.menu {
+  display: inline-flex;
+  align-items: center;
+}
 nav {
   display: none;
+  flex-direction: column;
+  gap: var(--xs);
 }
 nav.open {
-  display: grid;
+  display: flex;
   margin-bottom: var(--l);
 }
 nav a {
@@ -347,18 +353,16 @@ footer span {
     display: block;
   }
   .shell {
-    display: grid;
-    grid-template-columns: 13rem minmax(0, 1fr);
-    gap: var(--xl);
     padding-top: var(--xl);
   }
   nav,
   nav.open {
     display: flex;
-    flex-direction: column;
-    position: sticky;
-    top: var(--m);
-    height: fit-content;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s);
+    margin-bottom: var(--xl);
   }
   .mast,
   .shell,
