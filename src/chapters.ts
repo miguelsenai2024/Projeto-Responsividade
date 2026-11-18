@@ -12,7 +12,7 @@ export const chapters = [
   },
   { path: "/imagens", title: "Imagens", headline: "Espaço para a imagem." },
   {
-    path: "/vue",
+    path: "/boas-praticas",
     title: "Boas práticas Vue",
     headline: "Componentes em ordem.",
   },
