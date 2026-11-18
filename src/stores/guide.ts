@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 export interface Lesson {
+  slug: string;
   intro: string;
   points: string[];
   code: string;

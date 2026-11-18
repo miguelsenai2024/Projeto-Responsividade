@@ -6,8 +6,9 @@ import LabPanel from "../components/LabPanel.vue";
 import VueRelease from "../components/VueRelease.vue";
 const props = defineProps<{ index: number }>();
 const guide = useGuide();
-const lesson = computed(() => guide.lessons[props.index]);
 const current = computed(() => chapters[props.index]!);
+const lesson = computed(() => guide.lessons.find((item) => "/" + item.slug === current.value.path)
+  ?? guide.lessons[props.index]);
 </script>
 <template>
   <div class="eyebrow ink">Caderno 0{{ index + 1 }} / {{ current.title }}</div>
@@ -27,12 +28,12 @@ const current = computed(() => chapters[props.index]!);
         <h2>Código comentado</h2>
         <small>{{ lesson.language }}</small>
       </div>
-      <pre><code>{{lesson.code}}</code></pre>
+      <pre><code>{{ lesson.code }}</code></pre>
     </section>
     <section class="answer">
       <b class="eyebrow">Pergunta-guia</b>
       <h2>{{ lesson.question }}</h2>
-      <p>{{ lesson.answer }}</p>
+      <p v-for="paragraph in lesson.answer.split('\n')" :key="paragraph">{{ paragraph }}</p>
     </section>
     <section>
       <h2>Fontes consultadas</h2>
