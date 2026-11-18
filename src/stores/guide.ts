@@ -9,7 +9,7 @@ export interface Lesson {
   answer: string;
   sources: [string, string][];
 }
-export const useGuide = defineStore("guide", {
+export const useGuideStore = defineStore("guide", {
   state: () => ({
     lessons: [] as Lesson[],
     error: "",

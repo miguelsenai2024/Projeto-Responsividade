@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+const props = defineProps<{ repository: string }>();
+const emit = defineEmits<{
+  "release-loaded": [version: string];
+}>();
+
 const version = ref("");
 const error = ref(false);
 async function load() {
   error.value = false;
   try {
     const response = await fetch(
-      "https://api.github.com/repos/vuejs/core/releases/latest",
+      `https://api.github.com/repos/${props.repository}/releases/latest`,
       { signal: AbortSignal.timeout(6000) },
     );
     if (!response.ok) throw new Error();
-    version.value = (await response.json()).tag_name;
+    const { tag_name } = await response.json();
+    if (typeof tag_name !== "string" || !tag_name) throw new Error();
+    version.value = tag_name;
+    emit("release-loaded", tag_name);
   } catch {
     error.value = true;
   }

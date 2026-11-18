@@ -1,14 +1,26 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { chapters } from "../chapters";
-import { useGuide } from "../stores/guide";
+import { computed, ref } from "vue";
+import { chapters, type LessonIndex } from "../chapters";
+import { useGuideStore } from "../stores/guide";
 import LabPanel from "../components/LabPanel.vue";
 import VueRelease from "../components/VueRelease.vue";
-const props = defineProps<{ index: number }>();
-const guide = useGuide();
+const props = defineProps<{ index: LessonIndex }>();
+const guide = useGuideStore();
 const current = computed(() => chapters[props.index]!);
 const lesson = computed(() => guide.lessons.find((item) => "/" + item.slug === current.value.path)
   ?? guide.lessons[props.index]);
+const vueRepository = "vuejs/core";
+const releaseVersion = ref("");
+const sources = computed(() => {
+  const references = lesson.value?.sources ?? [];
+  if (props.index !== 4 || !releaseVersion.value) return references;
+  const tag = encodeURIComponent(releaseVersion.value);
+  const release: [string, string] = [
+    `Vue · Notas da versão ${releaseVersion.value}`,
+    `https://github.com/${vueRepository}/releases/tag/${tag}`,
+  ];
+  return [...references, release];
+});
 </script>
 <template>
   <div class="eyebrow ink">Caderno 0{{ index + 1 }} / {{ current.title }}</div>
@@ -16,7 +28,11 @@ const lesson = computed(() => guide.lessons.find((item) => "/" + item.slug === c
   <template v-if="lesson"
     ><p class="lead">{{ lesson.intro }}</p>
     <LabPanel :index="index" />
-    <VueRelease v-if="index === 4" />
+    <VueRelease
+      v-if="index === 4"
+      :repository="vueRepository"
+      @release-loaded="releaseVersion = $event"
+    />
     <section>
       <h2>Como funciona</h2>
       <ul>
@@ -38,7 +54,7 @@ const lesson = computed(() => guide.lessons.find((item) => "/" + item.slug === c
     <section>
       <h2>Fontes consultadas</h2>
       <div class="sources">
-        <a v-for="[name, url] in lesson.sources" :key="url" :href="url"
+        <a v-for="[name, url] in sources" :key="url" :href="url"
           >{{ name }} ↗</a
         >
       </div>

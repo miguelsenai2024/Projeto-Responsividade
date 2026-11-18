@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from "vue";
+import type { LessonIndex } from "../chapters";
 import { GRID_GAP_REM, MIN_CARD_REM, ROOT_FONT_SIZE_PX, getActiveColumns, getMinWidthForColumnsPx, prints } from "../gridLab";
 
-const props = defineProps<{ index: number }>();
+const props = defineProps<{ index: LessonIndex }>();
 const titles = [
   "Mesa de viewport",
   "Régua tipográfica",
@@ -198,6 +199,7 @@ const demo =
       <div class="animal-lists" :key="round">
         <fieldset>
           <legend>Chave por índice</legend>
+          <!-- A chave por posição reproduz a troca de fichas neste experimento. -->
           <label v-for="(animal, i) in animals" :key="i" class="animal">
             {{ animal.name }}<input type="text" placeholder="Cor da ficha" />
           </label>

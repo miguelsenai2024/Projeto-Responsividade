@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { GRID_GAP_REM, MIN_CARD_REM, ROOT_FONT_SIZE_PX, getMinWidthForColumnsPx, prints } from "../gridLab";
-import { useGuide } from "../stores/guide";
+import { useGuideStore } from "../stores/guide";
 
-const guide = useGuide();
+const guide = useGuideStore();
 const value = ref<number>();
 const message = ref("");
 const pieces = prints.length;

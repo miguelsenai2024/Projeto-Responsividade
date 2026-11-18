@@ -2,14 +2,14 @@
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { chapters } from "./chapters";
-import { useGuide } from "./stores/guide";
+import { useGuideStore } from "./stores/guide";
 import "./style.css";
 const menuOpen = ref(false);
 function closeMenu() {
   menuOpen.value = false;
 }
 const route = useRoute();
-const guide = useGuide();
+const guide = useGuideStore();
 guide.load();
 watch(
   () => route.path,
