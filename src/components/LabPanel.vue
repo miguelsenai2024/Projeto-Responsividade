@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from "vue";
+import { gridLab } from "../gridLab";
+
 const props = defineProps<{ index: number }>();
 const titles = [
   "Mesa de viewport",
   "Régua tipográfica",
   "Bancada de Grid",
-  "Janela de recorte",
+  "Janela de recorte e estabilidade",
   "Identidade na lista",
 ];
 const wide = ref(props.index === 2 ? 480 : 640);
@@ -20,30 +22,64 @@ onMounted(() => {
     observer.observe(frame.value);
   }
 });
-onBeforeUnmount(() => observer?.disconnect());
+const preview = ref<HTMLIFrameElement>();
+const previewHeight = ref(280);
+const columns = ref(1);
+let previewObserver: ResizeObserver | undefined;
+function observePreview() {
+  previewObserver?.disconnect();
+  const grid = preview.value?.contentDocument?.querySelector("main");
+  if (!grid) return;
+  previewObserver = new ResizeObserver(() => {
+    previewHeight.value = Math.ceil(grid.getBoundingClientRect().height);
+    // auto-fit conserva trilhas vazias de 0px quando sobra espaço no fim.
+    const tracks = getComputedStyle(grid).gridTemplateColumns.split(" ");
+    columns.value = tracks.filter((track) => parseFloat(track) > 0).length;
+  });
+  previewObserver.observe(grid);
+}
+onBeforeUnmount(() => {
+  observer?.disconnect();
+  previewObserver?.disconnect();
+  window.clearTimeout(imageTimer);
+});
 const scale = computed(() => Math.min(1, available.value / wide.value));
 const base = ref(16);
-const fit = ref("cover");
-const keyed = ref(false);
-const animals = ref(["Arara", "Onça", "Tatu"]);
+const fit = ref<"cover" | "contain" | "fill">("cover");
+const ratio = ref("4 / 1");
+const reserveSpace = ref(true);
+const loadingImage = ref(false);
+let imageTimer: number | undefined;
+function replayImage() {
+  window.clearTimeout(imageTimer);
+  loadingImage.value = true;
+  imageTimer = window.setTimeout(() => { loadingImage.value = false; }, 1200);
+}
+
+const originalAnimals = [
+  { id: 1, name: "Arara" },
+  { id: 2, name: "Onça" },
+  { id: 3, name: "Tatu" },
+];
+const animals = ref([...originalAnimals]);
 const round = ref(0);
 function reset() {
-  animals.value = ["Arara", "Onça", "Tatu"];
+  animals.value = [...originalAnimals];
   round.value++;
 }
-const layout =
-  props.index === 2
-    ? "grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1rem;"
-    : "grid-template-columns:1fr;gap:8px;";
+
+const layout = props.index === 2
+  ? `grid-template-columns:repeat(auto-fit,minmax(${gridLab.columnRem}rem,1fr));gap:${gridLab.gapRem}rem;`
+  : "grid-template-columns:1fr;gap:0.5rem;";
 const demo =
-  '<!doctype html><html lang="pt-BR"><meta name="viewport" content="width=device-width, initial-scale=1"><style>*{box-sizing:border-box}html{font-size:16px}body{margin:0;font:14px monospace;color:#17271c}main{display:grid;' +
+  '<!doctype html><html lang="pt-BR"><meta name="viewport" content="width=device-width, initial-scale=1"><style>*{box-sizing:border-box}html{overflow:hidden;font-size:' + gridLab.rootPx + 'px}body{margin:0;font:14px monospace;color:#17271c}main{display:grid;' +
   layout +
   "}article{padding:10px;background:#fbf7ea;border:1px solid #203f34}b{display:block;margin-top:5px}.art{height:45px;background:repeating-linear-gradient(135deg,#cce68b 0 12px,#214a40 12px 23px)}article:nth-child(2) .art{background:radial-gradient(circle at 50% 100%,#df784e 0 24%,#ffe7a8 25% 44%,#9ab4a4 45%)}article:nth-child(3) .art{background:repeating-radial-gradient(circle at 100% 100%,#1d5548 0 10px,#c3d7be 11px 20px)}" +
   (props.index === 0
     ? "@media(min-width:600px){main{grid-template-columns:repeat(3,1fr)}}"
     : "") +
   "</style><main>" +
-  ["Diagonal", "Órbita", "Curva"]
+  gridLab.prints
     .map(
       (s, i) =>
         '<article><div class="art"></div><b>0' +
@@ -72,26 +108,15 @@ const demo =
       </p>
       <div class="board">
         <div ref="frame" class="frame">
-          <div
-            :style="{
-              height:
-                (index === 0 && wide < 600
-                  ? 275
-                  : index === 2 && wide < 464
-                    ? 275
-                    : index === 2 && wide < 704
-                      ? 182
-                      : 94) *
-                  scale +
-                'px',
-            }"
-          >
+          <div :style="{ height: previewHeight * scale + 'px' }">
             <iframe
+              ref="preview"
+              @load="observePreview"
               title="Vitrine de três gravuras em escala"
               :srcdoc="demo"
               :style="{
                 width: wide + 'px',
-                height: '280px',
+                height: previewHeight + 'px',
                 transform: 'scale(' + scale + ')',
               }"
               tabindex="-1"
@@ -101,7 +126,7 @@ const demo =
       </div>
       <div class="control">
         <label :for="'r' + index">Largura simulada</label
-        ><output>{{ wide }} px</output>
+        ><output :for="'r' + index">{{ wide }} px<span v-if="index === 2"> · {{ columns }} {{ columns === 1 ? "coluna" : "colunas" }}</span></output>
       </div>
       <input
         :id="'r' + index"
@@ -133,54 +158,63 @@ const demo =
       <input id="root" type="range" min="12" max="32" v-model.number="base" />
       <p>1,5 × {{ base }} = {{ base * 1.5 }} px</p></template
     >
-    <template v-else-if="index === 3"
-      ><p>
-        Compare o mesmo cartaz em uma moldura panorâmica. Observe as letras nas
-        bordas.
-      </p>
-      <img
-        src="../assets/cartaz.png"
-        srcset="../assets/cartaz-menor.png 360w, ../assets/cartaz.png 720w"
-        sizes="(min-width: 48rem) 40rem, 90vw"
-        width="720"
-        height="480"
-        alt="Cartaz geométrico com inscrições TOPO e BASE"
-        :style="{ objectFit: fit as 'cover' | 'contain' }"
-      /><label for="fit">Modo de encaixe</label
-      ><select id="fit" v-model="fit">
-        <option>cover</option>
-        <option>contain</option>
-      </select>
-      <p>
-        {{
-          fit === "cover"
-            ? "A imagem preenche a janela e perde parte do topo e da base."
-            : "A imagem inteira aparece e sobra espaço nas laterais."
-        }}
-      </p></template
-    >
-    <template v-else
-      ><p>
-        Digite uma cor para a Onça e remova a Arara. Repita com uma chave
-        estável para comparar.
-      </p>
-      <label
-        ><input type="checkbox" v-model="keyed" @change="reset" /> Usar o nome
-        como chave</label
-      >
-      <div :key="round">
-        <label
-          v-for="(animal, i) in animals"
-          :key="keyed ? animal : i"
-          class="animal"
-          >{{ animal }}<input placeholder="Cor da ficha"
-        /></label>
+    <template v-else-if="index === 3">
+      <p>Escolha a moldura e o encaixe. Observe as marcas TOPO e BASE para descobrir o que foi cortado ou esticado.</p>
+      <div class="actions">
+        <label>Encaixe
+          <select v-model="fit">
+            <option>cover</option><option>contain</option><option>fill</option>
+          </select>
+        </label>
+        <label>Proporção da moldura
+          <select v-model="ratio">
+            <option value="4 / 1">Panorâmica (4:1)</option>
+            <option value="3 / 2">Original (3:2)</option>
+            <option value="1 / 1">Quadrada (1:1)</option>
+          </select>
+        </label>
       </div>
       <div class="actions">
-        <button :disabled="animals.length < 3" @click="animals.shift()">
-          Remover Arara</button
-        ><button @click="reset">Reiniciar</button>
-      </div></template
-    >
+        <label><input type="checkbox" v-model="reserveSpace" /> Reservar espaço antes da imagem</label>
+        <button type="button" @click="replayImage">Simular carregamento</button>
+      </div>
+      <p role="status">{{ loadingImage ? "Aguardando a imagem…" : "Imagem disponível." }}</p>
+      <figure class="poster">
+        <div :style="{ aspectRatio: reserveSpace || !loadingImage ? ratio : undefined }">
+          <img
+            v-if="!loadingImage"
+            src="../assets/cartaz.png"
+            srcset="../assets/cartaz-menor.png 360w, ../assets/cartaz.png 720w"
+            sizes="(min-width: 48rem) 40rem, 90vw"
+            :width="reserveSpace ? 720 : undefined"
+            :height="reserveSpace ? 480 : undefined"
+            alt="Cartaz geométrico com inscrições TOPO e BASE"
+            :style="{ objectFit: fit }"
+          />
+        </div>
+        <figcaption>Observe esta legenda enquanto o cartaz carrega. Com espaço reservado, ela permanece no lugar.</figcaption>
+      </figure>
+    </template>
+    <template v-else>
+      <p>Digite “azul” para a Onça nas duas listas. Remova o primeiro animal e veja quem fica com a cor em cada lista.</p>
+      <div class="animal-lists" :key="round">
+        <fieldset>
+          <legend>Chave por índice</legend>
+          <label v-for="(animal, i) in animals" :key="i" class="animal">
+            {{ animal.name }}<input type="text" placeholder="Cor da ficha" />
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Chave por ID</legend>
+          <label v-for="animal in animals" :key="animal.id" class="animal">
+            {{ animal.name }}<input type="text" placeholder="Cor da ficha" />
+          </label>
+        </fieldset>
+      </div>
+      <div class="actions">
+        <button type="button" :disabled="!animals.length" @click="animals.shift()">Remover 1º Animal</button>
+        <button type="button" @click="reset">Reiniciar</button>
+      </div>
+    </template>
   </section>
 </template>
