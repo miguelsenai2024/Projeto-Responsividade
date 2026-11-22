@@ -20,7 +20,7 @@ Guia prático e interativo desenvolvido em Vue 3 para demonstrar, na prática, c
 
 
 
-* **[Nome Completo do Integrante 1]**
+* **Miguel Oliveira De Almeida**
 
 * **[Nome Completo do Integrante 2]**
 
