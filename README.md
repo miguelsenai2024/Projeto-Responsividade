@@ -22,7 +22,7 @@ Guia prático e interativo desenvolvido em Vue 3 para demonstrar, na prática, c
 
 * **Miguel Oliveira De Almeida**
 
-* **[Nome Completo do Integrante 2]**
+* **Davi Marcondes Paes de Souza**
 
 
 
