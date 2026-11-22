@@ -1,46 +1,130 @@
-# Escala · Guia de responsividade
+# Escala. — Guia Interativo de Responsividade Web
 
-[Abrir o guia no Netlify](https://projetorespon.netlify.app/)
 
-Guia interativo sobre como adaptar interfaces ao tamanho da tela. Cada capítulo reúne um laboratório, explicação, código comentado, pergunta-guia respondida e referências.
 
-## Rodar no computador
+Guia prático e interativo desenvolvido em Vue 3 para demonstrar, na prática, conceitos essenciais de design responsivo, unidades de medida, layouts flexíveis, imagens otimizadas e boas práticas de arquitetura front-end.
 
-Com Node.js 24.12 ou superior, execute na raiz do projeto:
 
-```sh
-npm install
-npm run dev
-```
 
-Abra o endereço local exibido pelo Vite. Para testar a versão de produção, execute `npm run build` e `npm run preview`. Para testar no celular pela mesma rede Wi-Fi, use `npm run dev -- --host` e abra o endereço Network exibido pelo Vite.
+* **Acesse o projeto publicado:** https://projetorespon.netlify.app
 
-## Laboratórios para a apresentação
+* **Repositório no GitHub:** https://github.com/miguelsenai2024/Projeto-Responsividade
 
-| Seção e rota | O que fazer | O que observar |
-|---|---|---|
-| Viewport · `/viewport` | Mover a régua de 599 para 600 px | A vitrine interna passa de uma coluna para três pela media query. |
-| Unidades CSS · `/unidades` | Mudar a raiz de 16 para 20 px | A amostra de 1,5rem passa de 24 para 30 px. |
-| Flexbox e Grid · `/layout` | Comparar 463 e 464 px | A segunda coluna cabe quando há espaço para duas peças e um intervalo. Use as setas do teclado para ajustar 1 px. |
-| Imagens · `/imagens` | Alternar `cover`, `contain` e `fill`, trocar a proporção e simular o carregamento | As marcas TOPO e BASE revelam o recorte ou a distorção. A legenda muda de posição durante a simulação quando a reserva de espaço está desligada. |
-| Boas práticas Vue · `/boas-praticas` | Digitar na segunda ficha e remover a primeira | Comparar o vínculo do campo com chave por posição e com chave estável. |
-| Desafio · `/desafio` | Investigar a primeira largura com três colunas | Digitar uma hipótese e conferir o resultado. |
 
-## Organização
 
-A interface usa Vue 3 com Composition API e `<script setup lang="ts">`. O Vite compila o projeto. Em `src/router/index.ts`, o Vue Router declara cada rota e carrega a view sob demanda com `() => import(...)`. A navegação por hash permite abrir um capítulo diretamente, por exemplo, `/#/layout`.
+---
 
-- **Conteúdo.** A store Pinia `useGuideStore`, em `src/stores/guide.ts`, carrega as cinco lições de `public/api/licoes.json`. A `ChapterView.vue` apresenta a explicação, o código comentado, a pergunta-guia e as fontes. Em Boas práticas Vue, `VueRelease.vue` consulta a API pública do GitHub e emite a versão encontrada. A página inclui as notas da versão entre as fontes quando a consulta funciona.
-- **Laboratórios.** `src/components/LabPanel.vue` monta o experimento de cada seção. A bancada e o desafio usam `src/gridLab.ts` para calcular quantas colunas cabem e qual largura elas exigem. Com raiz de 16 px, mínimo de 14 rem e intervalo de 1 rem, duas gravuras ocupam 464 px e três ocupam 704 px.
-- **Estilos.** `src/style.css` usa CSS mobile-first. Cores, espaçamentos, tamanhos de fonte e raios são design tokens em `:root`. O menu abre por botão no celular e fica visível a partir de 48 rem.
 
-O projeto usa caminhos relativos para funcionar também no subdiretório do GitHub Pages.
 
-## Publicar no GitHub Pages
+## Integrantes da Dupla
 
-1. Abra **Settings → Pages** e selecione **GitHub Actions** como origem. Em repositório privado, a disponibilidade depende do plano da conta.
-2. Na aba **Actions**, escolha **Publicar guia no GitHub Pages → Run workflow**, selecione `main` e confirme.
-3. Quando a execução terminar, abra o endereço do ambiente **github-pages**.
-4. Abra esse endereço no celular da dupla e faça uma captura com o laboratório visível. Cada integrante entrega os dois links e a captura.
 
-Para publicar uma alteração, execute o mesmo workflow novamente.
+
+* **[Nome Completo do Integrante 1]**
+
+* **[Nome Completo do Integrante 2]**
+
+
+
+---
+
+
+
+## Estrutura do Guia (Cadernos)
+
+
+
+O aplicativo está dividido em seis rotas independentes, cada uma contendo explicação acessível, experimento interativo, exemplo de código comentado, resposta à pergunta-guia e referências oficiais:
+
+
+
+1. **Caderno 01 — Viewport:** Importância do design responsivo, funcionamento da tag `<meta name="viewport">` e abordagem mobile-first com o experimento *Mesa de viewport*.
+
+2. **Caderno 02 — Unidades CSS:** Diferenças entre unidades absolutas e relativas (`px`, `rem`, `em`, `%`, `fr`, `vw`, `vh`, `dvh` e `ch`) com a *Régua tipográfica* interativa.
+
+3. **Caderno 03 — Flexbox e Grid:** Layouts unidimensionais e bidimensionais, alinhamentos e grids fluidos com `repeat(auto-fit, minmax())` na *Bancada de Grid*.
+
+4. **Caderno 04 — Imagens Responsivas:** Prevenção de deslocamento de layout (CLS), atributos `width` e `height`, `aspect-ratio`, `object-fit` (`cover` e `contain`), `loading="lazy"` e `srcset` na *Janela de recorte*.
+
+5. **Caderno 05 — Boas Práticas em Vue:** Organização de pastas, props e eventos tipados, importância do atributo `:key` no `v-for` (*Identidade na lista*), design tokens em `:root`, carregamento de rotas sob demanda (lazy loading), gerenciamento de estado com Pinia, consumo de API e métricas Core Web Vitals (LCP, INP e CLS).
+
+6. **Caderno 06 — Desafio:** Atividade prática final que exige o uso do laboratório de Grid para descobrir a largura exata de quebra de colunas.
+
+
+
+---
+
+
+
+## Tecnologias e Padrões Utilizados
+
+
+
+* **Framework:** Vue 3 (Composition API + `<script setup>`)
+
+* **Build Tool:** Vite
+
+* **Roteamento:** Vue Router (com carregamento sob demanda / *lazy loading*)
+
+* **Gerenciamento de Estado:** Pinia
+
+* **Estilização:** CSS puro com arquitetura *Mobile-First* (`min-width`), unidades relativas em `rem` e variáveis globais (Design Tokens) em `:root`
+
+* **Hospedagem:** Netlify
+
+
+
+---
+
+
+
+## Como Executar o Projeto Localmente
+
+
+
+1. **Clone o repositório:**
+
+   ```bash
+
+   git clone https://github.com/miguelsenai2024/Projeto-Responsividade.git
+
+   ```
+
+
+
+2. **Acesse a pasta do projeto:**
+
+   ```bash
+
+   cd Projeto-Responsividade
+
+   ```
+
+
+
+3. **Instale as dependências:**
+
+   ```bash
+
+   npm install
+
+   ```
+
+
+
+4. **Inicie o servidor de desenvolvimento:**
+
+   ```bash
+
+   npm run dev
+
+   ```
+
+
+
+5. Abra no navegador o endereço local exibido no terminal (geralmente `http://localhost:5173`).
+
+
+
+---
+
